@@ -1,18 +1,16 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+    <div class="home">
+        <h1>Bienvenue sur Elemath</h1>
+
+        <div class="row">
+            <div class="columns six">
+                <h2>Exercices niveau CP</h2>
+
+                <ul>
+                    <li><router-link :to="{ name: 'cp-suite-de-nombres' }">Suite de nombres</router-link></li>
+                    <li><router-link :to="{ name: 'cp-chiffres-et-nombres' }">Chiffres et nombres</router-link></li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </template>
-
-<script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-
-export default {
-  name: 'Home',
-  components: {
-    HelloWorld
-  }
-}
-</script>
