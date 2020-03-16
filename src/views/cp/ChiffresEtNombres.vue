@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h2>Suite de nombres</h2>
+        <h2>Chiffres &amp; nombres</h2>
         <form @submit.prevent="generate" class="row" v-if="params.visible">
             <div class="columns three">
                 <label>Valeur minimale</label>
@@ -152,8 +152,7 @@ export default {
                 hundredsOut = (hundreds > 1 ? units2Letters[hundreds] + '-' : '') + (hundreds > 0 ? 'cent' : '') + (hundreds > 1 && tens === 0 && units === 0 ? 's' : '')
 
                 // Retour du total
-                const result = hundredsOut + (hundredsOut && tensOut ? '-' : '') + tensOut + ((hundredsOut && unitsOut) || (tensOut && unitsOut) ? '-' : '') + unitsOut
-                return result.split('-').join(' ')
+                return hundredsOut + (hundredsOut && tensOut ? '-' : '') + tensOut + ((hundredsOut && unitsOut) || (tensOut && unitsOut) ? '-' : '') + unitsOut
             }
         },
         verifyLetters (event, num) {
@@ -162,8 +161,8 @@ export default {
                 return
             }
 
-            val = val.trim().toLowerCase().trim().split('-').join('').split('.').join('')
-            if (val === this.numberToLetters(num).split('-').join('')) {
+            val = val.trim().toLowerCase().trim().split(' ').join('-').split('.').join('')
+            if (val === this.numberToLetters(num)) {
                 this.setSuccess(event.target)
             } else {
                 this.setError(event.target)
