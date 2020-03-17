@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h2>Chiffres &amp; nombres</h2>
+        <h2>Lettres vers nombres</h2>
         <form @submit.prevent="generate" class="row" v-if="params.visible">
             <div class="columns three">
                 <label>Valeur minimale</label>
@@ -18,54 +18,17 @@
                 <input type="submit" value="Générer une suite" class="button-primary"/>
             </div>
         </form>
-        <template v-if="params.suite.length > 0">
-            <div class="row">
-                <div class="columns six">
-                    <h2>Écrire les nombres suivants en lettres</h2>
-                    <div>
-                        <template v-for="(num, index) in params.suite[0]">
-                            <div class="row" v-bind:key="num">
-                                <div class="columns three">
-                                    {{ num }}
-                                </div>
-                                <div class="columns nine">
-                                    <template v-if="index === 0">
-                                        <input type="text" :value="numberToLetters(num)" class="u-full-width" disabled />
-                                    </template>
-                                    <template v-else>
-                                        <input type="text" @change="verifyLetters($event, num)" class="u-full-width" />
-                                    </template>
-                                </div>
-                            </div>
-                        </template>
-                    </div>
+        <div v-if="params.suite.length > 0">
+            <h2>Trouver le nombre correspondant</h2>
+            <div v-for="num in params.suite" v-bind:key="num" class="row lines">
+                <div class="columns three">
+                    {{ numberToLetters(num) }}
                 </div>
-                <div class="columns six">
-                    <h2>Écrire les nombres suivants en chiffres</h2>
-                    <div>
-                        <template v-for="(num, index) in params.suite[1]">
-                            <div class="row" v-bind:key="num">
-                                <div class="columns six">
-                                    <template v-if="index === 0">
-                                        <input type="text" :value="num" class="u-full-width" disabled />
-                                    </template>
-                                    <template v-else>
-                                        <input type="text" @change="verifyNumbers($event, num)" class="u-full-width" />
-                                    </template>
-                                </div>
-                                <div class="columns six u-text-right">
-                                    {{ numberToLetters(num) }}
-                                </div>
-                            </div>
-                        </template>
-                    </div>
+                <div v-for="rnd in generateRandomThree(num)" v-bind:key="rnd" class="columns three u-text-center">
+                    <a href="javascript:;" v-on:click.prevent="validate($event, num, rnd)">{{ rnd }}</a>
                 </div>
             </div>
-        </template>
-        <template v-if="success">
-            <h2>SUPER! Tu as réussi!</h2>
-            <img src="https://media.giphy.com/media/11sBLVxNs7v6WA/source.gif" />
-        </template>
+        </div>
     </div>
 </template>
 
@@ -97,7 +60,7 @@ export default {
         }
     },
     methods: {
-        _generate () {
+        generate () {
             this.params.max = parseInt(this.params.max)
             this.params.min = parseInt(this.params.min)
             this.params.quantity = parseInt(this.params.quantity)
@@ -109,14 +72,11 @@ export default {
                     numbers.push(current)
                 }
 
-                if (numbers.length === this.params.quantity + 1) {
+                if (numbers.length === this.params.quantity) {
                     break
                 }
             }
-            return numbers
-        },
-        generate () {
-            this.params.suite = [this._generate(), this._generate()]
+            this.params.suite = numbers
         },
         numberToLetters (number) {
             // Taken from https://course.oc-static.com/ftp-tutos/cours/javascript/part1/chap9/TP.html
@@ -159,36 +119,40 @@ export default {
                 return hundredsOut + (hundredsOut && tensOut ? '-' : '') + tensOut + ((hundredsOut && unitsOut) || (tensOut && unitsOut) ? '-' : '') + unitsOut
             }
         },
-        verifyLetters (event, num) {
-            let val = event.target.value
-            if (!val || val.trim() === '') {
-                return
+        generateRandomThree (original) {
+            const results = [original]
+            const min = original - 5
+            const max = original + 5
+            while (true) {
+                const current = Math.floor(Math.random() * (max - min)) + min
+                if (results.indexOf(current) === -1) {
+                    results.push(current)
+                }
+
+                if (results.length === 3) break
             }
 
-            val = val.trim().toLowerCase().trim().split(' ').join('-').split('.').join('')
-            if (val === this.numberToLetters(num)) {
-                this.setSuccess(event.target)
-            } else {
-                this.setError(event.target)
-            }
+            results.sort()
+            return results
         },
-        verifyNumbers (event, num) {
-            const val = parseInt(event.target.value)
-            if (!val || val.trim() === '') {
+        validate (event, original, current) {
+            if (event.target.parentNode.parentNode.classList.contains('error') || event.target.parentNode.parentNode.classList.contains('success')) {
                 return
             }
 
-            if (val === num) {
+            if (original === current) {
                 this.setSuccess(event.target)
             } else {
                 this.setError(event.target)
             }
         },
         setError (target) {
+            target = target.parentNode.parentNode
             target.classList.remove('success')
             target.classList.add('error')
         },
         setSuccess (target) {
+            target = target.parentNode.parentNode
             target.classList.remove('error')
             target.classList.add('success')
         }
@@ -196,16 +160,40 @@ export default {
 }
 </script>
 
-<style scoped>
-    input.success {
-        color: green;
-        border: solid 1px green;
-        font-weight: bold;
-    }
+<style lang="sass" scoped>
+.u-text-center
+    text-align: center
 
-    input.error {
-        color: red;
-        border: solid 1px red;
-        font-weight: bold;
-    }
+div.lines
+    margin-bottom: 10px
+
+    & a
+        text-decoration: none
+        color: #333
+        padding: 5px 25px
+        border: solid 1px #333
+        border-radius: 5px
+        &:hover
+            border-color: #000
+            color: #000
+            background-color: #ddd
+
+    &.success
+        color: green
+
+        & a
+            color: green
+            border-color: green
+            font-weight: bold
+            cursor: default
+            background-color: #fff
+
+    &.error
+        color: red
+        & a
+            color: red
+            font-weight: bold
+            border-color: red
+            cursor: default
+            background-color: #fff
 </style>

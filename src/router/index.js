@@ -25,9 +25,19 @@ const routes = [
         component: () => import('@/views/cp/ChiffresEtNombres')
     },
     {
-        path: '/cp/exercice2/:range/:quantity',
+        path: '/cp/chiffres-et-nombres/:range/:quantity',
         name: 'cp-chiffres-et-nombres-params',
         component: () => import('@/views/cp/ChiffresEtNombres')
+    },
+    {
+        path: '/cp/lettres-vers-nombres/',
+        name: 'cp-lettres-vers-nombres',
+        component: () => import('@/views/cp/LettresVersNombre')
+    },
+    {
+        path: '/cp/lettres-vers-nombres/:range/:quantity',
+        name: 'cp-lettres-vers-nombres-params',
+        component: () => import('@/views/cp/LettresVersNombre')
     }
 ]
 
