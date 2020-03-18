@@ -38,6 +38,16 @@ const routes = [
         path: '/cp/lettres-vers-nombres/:range/:quantity',
         name: 'cp-lettres-vers-nombres-params',
         component: () => import('@/views/cp/LettresVersNombre')
+    },
+    {
+        path: '/cp/nombres-avant-apres/',
+        name: 'cp-nombres-avant-apres',
+        component: () => import('@/views/cp/NombresAvantApres')
+    },
+    {
+        path: '/cp/nombres-avant-apres/:range/:quantity',
+        name: 'cp-nombres-avant-apres-params',
+        component: () => import('@/views/cp/NombresAvantApres')
     }
 ]
 

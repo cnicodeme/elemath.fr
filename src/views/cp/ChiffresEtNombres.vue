@@ -77,7 +77,7 @@ export default {
                 visible: true,
                 min: 70,
                 max: 99,
-                quantity: 10,
+                quantity: 5,
                 suite: []
             },
             success: false

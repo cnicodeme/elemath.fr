@@ -4,11 +4,24 @@
             <router-link to="/">Home</router-link> |
             <router-link :to="{ name: 'cp-suite-de-nombres' }">Suite de nombres</router-link> |
             <router-link :to="{ name: 'cp-chiffres-et-nombres' }">Chiffres et nombres</router-link> |
-            <li><router-link :to="{ name: 'cp-lettres-vers-nombres' }">Lettres vers nombres</router-link></li>
+            <router-link :to="{ name: 'cp-lettres-vers-nombres' }">Lettres vers nombres</router-link> |
+            <router-link :to="{ name: 'cp-nombres-avant-apres' }">Nombres avant/après</router-link>
         </div>
         <router-view/>
     </div>
 </template>
+
+<script>
+/*
+Exercices :
+
+    * Ecrire le nombre avant et apres : ... ; 92 ; ...
+    * Completer les cases vides, dans l'ordre croissant (ou décroissant):
+        xxx ; 20 ; 25
+        85 ; xxx ; 89
+    * Pareil, mais avec > ; <
+*/
+</script>
 
 <style lang="scss">
 #app {
