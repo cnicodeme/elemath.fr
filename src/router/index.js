@@ -22,8 +22,8 @@ const routes = [
                 component: () => import('@/views/cp/SuiteNombres')
             },
             {
-                path: 'suite-et-nombres/:range/:quantity',
-                name: 'cp-suite-et-nombres-params',
+                path: 'suite-de-nombres/:range/:quantity',
+                name: 'cp-suite-de-nombres-params',
                 meta: {
                     title: 'Suite de nombres'
                 },

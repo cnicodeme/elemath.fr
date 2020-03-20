@@ -1,31 +1,23 @@
 <template>
-    <div>
-        <h2>Écrire les nombres suivants en lettres</h2>
-        <div v-for="(num, index) in $parent.generate()" class="row" v-bind:key="num">
+    <div v-if="$parent.params.suite && $parent.params.suite.length">
+        <p>Écrire les nombres suivants en lettres</p>
+        <div v-for="(num, index) in getHalf(0)" class="row" v-bind:key="'first-' + index">
             <div class="columns four u-text-center">
                 {{ num }}
             </div>
             <div class="columns eight">
-                <template v-if="index === 0">
-                    <input type="text" :value="$parent.numberToLetters(num)" class="u-full-width" disabled />
-                </template>
-                <template v-else>
-                    <input type="text" @change="verifyLetters($event, num)" class="u-full-width" />
-                </template>
+                <input v-if="index === 0" type="text" :value="$parent.numberToLetters(num)" class="u-full-width" disabled />
+                <input v-else type="text" @change="verifyLetters($event, num)" class="u-full-width" />
             </div>
         </div>
         <hr />
-        <h2>Écrire les nombres suivants en chiffres</h2>
-        <div v-for="(num, index) in $parent.generate()" class="row" v-bind:key="num">
+        <p>Écrire les nombres suivants en chiffres</p>
+        <div v-for="(num, index) in getHalf(1)" class="row" v-bind:key="'second-' + index">
             <div class="columns six">
-                <template v-if="index === 0">
-                    <input type="text" :value="num" class="u-full-width" disabled />
-                </template>
-                <template v-else>
-                    <input type="text" @change="verifyNumbers($event, num)" class="u-full-width" />
-                </template>
+                <input v-if="index === 0" type="text" :value="num" class="u-full-width" disabled />
+                <input v-else type="text" @change="verifyNumbers($event, num)" class="u-full-width" />
             </div>
-            <div class="columns six u-text-right">
+            <div class="columns six u-text-center">
                 {{ $parent.numberToLetters(num) }}
             </div>
         </div>
@@ -34,19 +26,18 @@
 
 <script>
 export default {
-    data () {
-        return {
-            params: {
-                visible: true,
-                min: 70,
-                max: 99,
-                quantity: 5,
-                suite: []
-            },
-            success: false
-        }
+    created () {
+        this.$parent.params.quantity = 10
     },
     methods: {
+        getHalf (pos) {
+            const half = Math.floor(this.$parent.params.suite.length / 2)
+            if (pos === 0) {
+                return this.$parent.params.suite.slice(0, half)
+            } else {
+                return this.$parent.params.suite.slice(half, this.$parent.params.suite.length)
+            }
+        },
         verifyLetters (event, num) {
             let val = event.target.value
             if (!val || val.trim() === '') {
@@ -61,12 +52,12 @@ export default {
             }
         },
         verifyNumbers (event, num) {
-            const val = parseInt(event.target.value)
+            const val = event.target.value
             if (!val || val.trim() === '') {
                 return
             }
 
-            if (val === num) {
+            if (parseInt(val) === num) {
                 this.setSuccess(event.target)
             } else {
                 this.setError(event.target)

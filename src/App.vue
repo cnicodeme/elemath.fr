@@ -45,4 +45,6 @@ Exercices :
         }
     }
 }
+
+.u-text-center { text-align: center }
 </style>

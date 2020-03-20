@@ -1,30 +1,42 @@
 <template>
     <div>
         <h2>{{ $route.meta.title }}</h2>
-        <form @submit.prevent="generate" class="row" v-if="params.visible">
-            <div class="columns three">
-                <label>Valeur minimale</label>
-                <input type="number" v-model="params.min" />
+        <form @submit.prevent="generate" v-if="params.visible">
+            <div class="row">
+                <div class="columns three">
+                    <label>Valeur minimale</label>
+                    <input type="number" v-model="params.min" />
+                </div>
+                <div class="columns three">
+                    <label>Valeur maximale</label>
+                    <input type="number" v-model="params.max" />
+                </div>
+                <div class="columns three">
+                    <label>Quantité</label>
+                    <input type="number" v-model="params.quantity" />
+                </div>
+                <div class="columns three">
+                    <input type="submit" value="Générer une suite" class="button-primary" />
+                </div>
             </div>
-            <div class="columns three">
-                <label>Valeur maximale</label>
-                <input type="number" v-model="params.max" />
+            <div>
+                <p>
+                    Vous pouvez utiliser cette URL pour ne pas afficher les paramètres:<br />
+                    <router-link :to="{ name: $route.name + '-params', params: { range: params.min + '-' + params.max, quantity: params.quantity } }">
+                        {{ getOrigin() + $router.resolve({ name: $route.name + '-params', params: { range: params.min + '-' + params.max, quantity: params.quantity } }).href }}
+                    </router-link>
+                </p>
             </div>
-            <div class="columns three">
-                <label>Quantité</label>
-                <input type="number" v-model="params.quantity" />
-            </div>
-            <div class="columns three">
-                <input type="submit" value="Générer une suite" class="button-primary"/>
-            </div>
+            <hr />
         </form>
         <div>
             <router-view />
         </div>
-        <template v-if="success">
-            <h2>SUPER! Tu as réussi!</h2>
+        <div class="u-text-center" v-if="success">
+            <hr />
+            <h5>SUPER! Tu as réussi!</h5>
             <img src="https://media.giphy.com/media/11sBLVxNs7v6WA/source.gif" />
-        </template>
+        </div>
     </div>
 </template>
 
@@ -38,7 +50,8 @@ export default {
                 visible: true, // Affichage des options (true) ou non (false)
                 min: 70,       // Valeure minimale de la suite
                 max: 99,       // Valeure maximale de la suite
-                quantity: 5    // Nombre d'éléments dans la suite
+                quantity: 5,    // Nombre d'éléments dans la suite
+                suite: null
             },
             success: null      // Résultat de l'exercice
         }
@@ -53,9 +66,13 @@ export default {
             this.params.max = range[1]
             this.params.quantity = this.$route.params.quantity
             this.params.visible = false
+            this.generate()
         }
     },
     methods: {
+        getOrigin () {
+            return window.location.origin
+        },
         generate () {
             this.params.max = parseInt(this.params.max)
             this.params.min = parseInt(this.params.min)
@@ -72,11 +89,11 @@ export default {
                     numbers.push(current)
                 }
 
-                if (numbers.length === this.params.quantity + 1) {
+                if (numbers.length === this.params.quantity) {
                     break
                 }
             }
-            return numbers
+            this.params.suite = numbers
         },
         numberToLetters (number) {
             // Taken from https://course.oc-static.com/ftp-tutos/cours/javascript/part1/chap9/TP.html
@@ -118,6 +135,9 @@ export default {
                 // Retour du total
                 return hundredsOut + (hundredsOut && tensOut ? '-' : '') + tensOut + ((hundredsOut && unitsOut) || (tensOut && unitsOut) ? '-' : '') + unitsOut
             }
+        },
+        setSuccess (state) {
+            this.success = state
         }
     }
 }
