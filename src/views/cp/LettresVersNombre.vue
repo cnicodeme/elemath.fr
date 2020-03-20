@@ -18,6 +18,11 @@
 
 <script>
 export default {
+    data () {
+        return {
+            corrects: 0
+        }
+    },
     methods: {
         generateRandomThree (original) {
             const results = [original]
@@ -53,11 +58,15 @@ export default {
             const base = target.parentNode.parentNode
             base.classList.remove('success')
             base.classList.add('error')
+            this.corrects -= 1
+            this.$parent.setSuccess(this.corrects === this.$parent.params.quantity)
         },
         setSuccess (target) {
             const base = target.parentNode.parentNode
             base.classList.remove('error')
             base.classList.add('success')
+            this.corrects += 1
+            this.$parent.setSuccess(this.corrects === this.$parent.params.quantity)
         }
     }
 }

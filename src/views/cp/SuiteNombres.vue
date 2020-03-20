@@ -45,6 +45,7 @@ export default {
             return true
         },
         validate () {
+            this.$parent.setSuccess(false)
             const results = []
             let previous = null
             for (let i = 0; i < this.suggestion.length; i++) {
@@ -63,7 +64,7 @@ export default {
                 return alert('Il manque des nombres. Vous avez indiqué ' + results.length + ' nombres alors qu\'il en faut ' + this.$parent.params.quantity)
             }
 
-            this.success = true
+            this.$parent.setSuccess(true)
         }
     }
 }

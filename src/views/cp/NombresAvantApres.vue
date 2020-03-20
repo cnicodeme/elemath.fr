@@ -19,6 +19,11 @@
 
 <script>
 export default {
+    data () {
+        return {
+            corrects: 0
+        }
+    },
     methods: {
         verify (event, value) {
             if (parseInt(event.target.value) === value) {
@@ -30,10 +35,16 @@ export default {
         setError (target) {
             target.classList.remove('success')
             target.classList.add('error')
+
+            this.corrects -= 1
+            this.$parent.setSuccess(this.corrects === this.$parent.params.quantity)
         },
         setSuccess (target) {
             target.classList.remove('error')
             target.classList.add('success')
+
+            this.corrects += 1
+            this.$parent.setSuccess(this.corrects === this.$parent.params.quantity)
         }
     }
 }

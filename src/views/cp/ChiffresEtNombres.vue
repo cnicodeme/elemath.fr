@@ -26,17 +26,27 @@
 
 <script>
 export default {
+    data () {
+        return {
+            corrects: 0
+        }
+    },
     created () {
         this.$parent.params.quantity = 10
+        this.$parent.generate()
     },
     methods: {
         getHalf (pos) {
             const half = Math.floor(this.$parent.params.suite.length / 2)
+            let part = null
             if (pos === 0) {
-                return this.$parent.params.suite.slice(0, half)
+                part = this.$parent.params.suite.slice(0, half)
             } else {
-                return this.$parent.params.suite.slice(half, this.$parent.params.suite.length)
+                part = this.$parent.params.suite.slice(half, this.$parent.params.suite.length)
             }
+
+            part.unshift(Math.floor(Math.random() * (this.$parent.params.max - this.$parent.params.min)) + this.$parent.params.min)
+            return part
         },
         verifyLetters (event, num) {
             let val = event.target.value
@@ -66,10 +76,16 @@ export default {
         setError (target) {
             target.classList.remove('success')
             target.classList.add('error')
+
+            this.corrects -= 1
+            this.$parent.setSuccess(this.corrects === this.$parent.params.quantity)
         },
         setSuccess (target) {
             target.classList.remove('error')
             target.classList.add('success')
+
+            this.corrects += 1
+            this.$parent.setSuccess(this.corrects === this.$parent.params.quantity)
         }
     }
 }
